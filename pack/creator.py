@@ -20,7 +20,7 @@ def limit(e):
 @bp.route('/')
 def homee():
     if session.get('logged_in'):
-        if me().roles != 'Artist' or 'Admin':
+        if me().roles not in ['Admin','Artist']:
             return redirect(url_for('home'))
         else:
             user = User.query.get(current_user.id)
@@ -42,7 +42,7 @@ def back():
 @bp.route('/project')
 def project():
     if session.get('logged_in'):
-        if me().roles != 'Artist' or 'Admin':
+        if me().roles not in ['Admin','Artist']:
             return redirect(url_for('home'))
         else:
             sn = Song.query.filter_by(user_id=me().id).first()
@@ -79,7 +79,7 @@ def follow_link(username):
 @bp.route('/beats')
 def beats():
     if session.get('logged_in'):
-        if me().roles != 'Artist' or 'Admin':
+        if me().roles not in ['Admin','Artist']:
             return redirect(url_for('home'))
         else:
             songs = Song.query.order_by(func.random()).all()
@@ -93,7 +93,7 @@ def beats():
 @bp.route('/my-medias')
 def account():
     if session.get('logged_in'):
-        if me().roles != 'Artist' or 'Admin':
+        if me().roles not in ['Admin','Artist']:
             return redirect(url_for('home'))
         else:
             music = Song.query.filter_by(user_id=me().id).count()
@@ -113,10 +113,10 @@ def songs_play(post_id):
         return redirect(url_for('login'))
 
 @bp.route('/upload', methods=['POST'])
-@limiter.limit("1 per 120 days")
+@limiter.limit("20 per 120 days")
 def upload():
     if session.get('logged_in'):
-       if me().roles == 'Admin':
+       if me().roles =='Admin':
            user = me()
            content = request.form.get('title')
            gallery = request.files.get('gallery')
@@ -148,7 +148,7 @@ def upload():
 @bp.route('/settings')
 def settings():
     if session.get('logged_in'):
-        if me().roles != 'Artist' or 'Admin':
+        if me().roles not in ['Admin','Artist']:
             return redirect(url_for('home'))
         else:
             music = Song.query.filter_by(user_id=me().id).count()
@@ -267,7 +267,7 @@ def profile(username):
     if session.get('logged_in'):
         user = User.query.get(current_user.id)
         other = User.query.filter_by(username=username).first()
-        if user.roles == 'Artist' or 'Admin':
+        if user.roles in ['Admin','Artist']:
             last_seen()
 
             follows = is_following(self=user, user_id=other)
@@ -360,7 +360,7 @@ def add_comment(post_id):
 def create():
     if session.get('logged_in'):
         user = me()
-        if user.roles == 'Artist' or 'Admin':
+        if user.roles in ['Admin','Artist']:
             video = request.files.getlist('media')
             image = request.files.get('image')
             content = request.form.get('content')
