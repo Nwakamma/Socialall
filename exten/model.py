@@ -1,4 +1,4 @@
-from sqlalchemy import Column, DateTime, func,ForeignKey, Integer, String, VARCHAR, Boolean, LargeBinary, Date
+from sqlalchemy import Column, DateTime, func,ForeignKey, Integer, String, VARCHAR, Boolean, LargeBinary, Date, TEXT
 from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from plugin import timer, db
@@ -452,7 +452,7 @@ class BlogPost(db.Model):
     user_id = Column(Integer, ForeignKey('user.id'))
     title = Column(String(250), nullable=False)
     summary = Column(String(250), nullable=False)
-    body = Column(String(65000), nullable=False)
+    body = Column(TEXT, nullable=False)
     thumb = Column(String(100))
     category = Column(String(100))
     tag = Column(String(100))
