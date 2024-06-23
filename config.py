@@ -4,7 +4,7 @@
 class Config():
     DEBUG=True
     SECRET_KEY="43658yweghgbtutgeerghdfghstwfgvwfh"
-    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://user:AVNS_dETjQhwllxM2PETIuLO@emeka-do-user-17033445-0.c.db.ondigitalocean.com:25060/emeka'
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://usbrkkoplvegqwrs:sfRCmVxVidEpYibk6FI0@bleybyeph70hyr5wq99h-mysql.services.clever-cloud.com:3306/bleybyeph70hyr5wq99h'
     MAIL_SERVER= 'live.smtp.mailtrap.io'
     MAIL_PORT = 587
     MAIL_USERNAME ='api'
