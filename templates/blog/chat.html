@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chat Room</title>
+    <style>
+      .message {
+        padding: 10px;
+        margin-bottom: 5px;
+        border-radius: 5px;
+      }
+      .sender_message {
+        background-color: #ddd;
+        text-align: right;
+      }
+      .receiver_message {
+        background-color: #091acd;
+        text-align: left;
+      }
+    </style>
+    
+    
+
+</head>
+<body>
+    <ul id="messages"></ul>
+    <input type="text" id="message">
+    <button id="send_message">Send</button>
+
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+
+<script type="text/javascript" charset="utf-8">
+document.addEventListener('DOMContentLoaded', () => {
+  const socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+  const room = getReceiverId();
+  const receiver_id = "{{other.id}}"
+  const sender_id = "{{user.id}}" 
+
+  socket.on('connect', () => {
+    // Get the receiver ID dynamically (replace with your logic)
+    // Assuming receiver ID is in an input field
+
+    socket.emit('join', {'username': '{{user.username}}', 'room': room});
+  });
+
+  socket.on('message', data => {
+    const li = document.createElement('li');
+    const messageClass = data.sender_id === receiver_id ? 'sender_message' : 'receiver_message';
+    li.innerHTML = data.message + receiver_id;
+    li.classList.add('message', messageClass);
+    document.getElementById('messages').appendChild(li);
+  });
+
+  document.getElementById('send_message').onclick = () => {
+    const message = document.getElementById('message').value;
+    socket.emit('message', {'receiver_id': receiver_id, 'message': message, 'sender_id': sender_id, 'room': room});
+    document.getElementById('message').value = '';
+  };
+});
+
+// Function to get the receiver ID (replace with your implementation)
+function getReceiverId() {
+  // Implement logic to fetch the receiver ID
+  // This could involve user selection, data from another source, etc.
+  return "{{roomId.key}}"; // Placeholder value
+};
+
+</script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            overflow: hidden;
+        }
+        header {
+            background: #50b3a2;
+            color: white;
+            padding-top: 30px;
+            min-height: 70px;
+            border-bottom: #e8491d 3px solid;
+        }
+        header a {
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            font-size: 16px;
+        }
+        header ul {
+            padding: 0;
+            list-style: none;
+        }
+        header ul li {
+            float: left;
+            display: inline;
+            padding: 0 20px 0 20px;
+        }
+        header #branding {
+            float: left;
+        }
+        header #branding h1 {
+            margin: 0;
+        }
+        header nav {
+            float: right;
+            margin-top: 10px;
+        }
+        header .highlight, header .current a {
+            color: #e8491d;
+            font-weight: bold;
+        }
+        header a:hover {
+            color: #ffffff;
+            font-weight: bold;
+        }
+        .about {
+            padding: 50px 0;
+            background: #e8491d;
+            color: white;
+        }
+        .about h1, .about p {
+            text-align: center;
+        }
+        .mission {
+            padding: 25px 0;
+            background: #ffffff;
+        }
+        .mission h1, .mission p {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div id="branding">
+                <h1><span class="highlight">Our</span> Community</h1>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="current"><a href="about.html">About Us</a></li>
+                    <li><a href="services.html">Services</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="about">
+        <div class="container">
+            <h1>About Our Community</h1>
+            <p>We are dedicated to making our platform the most engaging and user-friendly community on the web. Join us and be part of something special.</p>
+        </div>
+    </section>
+
+    <section class="mission">
+        <div class="container">
+            <h1>Our Mission</h1>
+            <p>To create a vibrant community where everyone feels welcome, valued, and engaged. We believe in building strong connections and empowering our users to share, collaborate, and grow together.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>© {{date.strftime('%Y')}} Our Community. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html>

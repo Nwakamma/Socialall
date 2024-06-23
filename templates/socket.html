@@ -1,0 +1,172 @@
+<script src="https://cdn.socket.io/socket.io-4.0.1.js"></script>
+<!-- <script src="{{url_for('static', filename='assets/js/socketio.js')}}"></script> -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+    var sender_id = "{{ user.id }}";
+    var recipient_id = "{{ other.id }}";
+    var room = getRoomKey();
+    var chatDiv = document.getElementById('chat');
+    var messageInput = document.getElementById('message_input');
+    var typingIndicator = document.getElementById('typingIndicator');
+    var typing = false;
+        //var sendButton = document.getElementById('send_button');
+        
+        
+
+        
+
+    socket.on('connect', () => {
+        socket.emit('join', {'username': "{{user.username}}", 'room': room});
+
+        
+    socket.on('mmessage', data => {
+       const li = document.createElement('li');
+       const mainmess = document.getElementById('mainmess');
+       const imgDiv = document.createElement('div');
+       const RClass = ['flex', 'gap-3'];
+       const SClass = ['flex', 'gap-2', 'flex-row-reverse', 'items-end'];
+       const messageClass = ['px-4', 'py-2', 'rounded-[20px]','max-w-sm', 'bg-secondery'];
+       
+       const designMess = ['px-4', 'py-2', 'rounded-[20px]', 'max-w-sm', 'bg-gradient-to-tr', 'from-sky-500', 'to-blue-500','text-white', 'shadow'];
+       if (data.sender_id === recipient_id) {
+        imgDiv.classList.add(...RClass);
+        imgDiv.innerHTML = '<img src="{{url_for('static', filename='user/imgs/' + other.profile_photo )}}" alt="" class="w-5 h-5 rounded-full shadow">' + '&ensp;';
+        mainmess.appendChild(imgDiv);
+        li.classList.add(...messageClass, 'receiver_message');
+        li.innerHTML = data.message;
+        mainmess.appendChild(li);
+       } else {
+        imgDiv.classList.add(...SClass);
+        imgDiv.innerHTML = '<img src="{{url_for('static', filename='user/imgs/' + user.profile_photo )}}" alt="" class="w-5 h-5 rounded-full shadow">' + '&ensp;';
+        mainmess.appendChild(imgDiv);
+        li.classList.add(...designMess, 'sender_message');
+        li.innerHTML = data.message;
+        mainmess.appendChild(li);
+       };
+       
+    });
+
+    document.getElementById('mess_upload_Submit').onclick = () => {
+        socket.emit('show_media', {'recipient_id': recipient_id, 'sender_id': sender_id, 'room': room});
+        socket.on('show_media', data => {
+            const li = document.createElement('li')
+            const mainmess = document.getElementById('mainmess');
+            const imgDiv = document.createElement('div');
+            const RClass = ['flex', 'gap-3'];
+            const profilePhoto = data.sender_id === recipient_id ?  escapeHtml( "{{other.profile_photo}}" ) : escapeHtml( "{{user.profile_photo}}" );
+            const SClass = ['flex', 'gap-2', 'flex-row-reverse', 'items-end'];
+            const messageClass = ['px-4', 'py-2', 'rounded-[20px]','max-w-sm', 'bg-secondery'];
+            const designMess = ['px-4', 'py-2', 'rounded-[20px]', 'max-w-sm', 'bg-gradient-to-tr', 'from-sky-500', 'to-blue-500','text-white', 'shadow'];
+            const imgstag = '<img src="/static/user/imgs/' + profilePhoto + '" alt="" class="w-5 h-5 rounded-full shadow">';
+            
+            if (data.sender_id === recipient_id) {
+                if (data.image || data.video) {
+                    li.classList.add(...messageClass, 'receiver_message');
+                    li.innerHTML = data.image ? `<img src="{{url_for('static', filename='/user/imgs/')}} + data.image" class="media-preview">` : `<video width="320" height="240" controls><source src="{{url_for('static', filename='user/videos/')}} + data.video" type="video/mp4">Your browser does not support the video tag.</video>`;
+                    mainmess.appendChild(li);
+                } else{
+                    li.innerHTML = data.msg;
+                    mainmess.appendChild(li);
+                }
+            } else {
+                if (data.image || data.video) {
+                    li.classList.add(...designMess, 'sender_message');
+                    li.innerHTML = data.image ? `<img src="{{url_for('static', filename='/user/imgs/')}}  + data.image" class="media-preview">` : `<video width="320" height="240" controls><source src="{{url_for('static', filename='user/videos/')}} + data.video" type="video/mp4">Your browser does not support the video tag.</video>`;
+                    mainmess.appendChild(li);
+                } else{
+                    li.innerHTML = data.msg ;
+                    mainmess.appendChild(li);
+                }
+        
+            };
+
+
+
+        });
+        
+    };
+
+    document.getElementById('send_button').onclick = () => {
+        message = messageInput.value;
+        socket.emit('mmessage', {'message': message, 'room': room, 'recipient_id': recipient_id, 'sender_id': sender_id})
+        messageInput.value = '';
+    };
+
+    
+
+        messageInput.addEventListener('input', function() {
+            if (!typing) {
+                typing = true;
+                socket.emit('typing', true);
+            }
+
+            setTimeout(function() {
+                typing = false;
+                socket.emit('typing', false);
+            }, 2000);
+        });
+        
+    
+
+        socket.on('typing', function(isTyping) {
+            typingIndicator.innerText = isTyping ? 'typing...' : '';
+        });
+    });
+
+    document.getElementById('callBtn').onclick = () => {
+        const receiver = "{{other.id}}"; // Make sure this is rendered correctly
+        const caller = "{{user.id}}";   // Make sure this is rendered correctly
+        const roomz = "{{other.id}}";
+        socket.emit('call_not', {'receiver': receiver, 'caller': caller, 'room': roomz});
+    };
+
+    socket.on('call_not', function(data) {
+        const CallerDiv = document.getElementById('ringingScreen');
+        CallerDiv.style.display = 'block';
+        CallerDiv.innerHTML = data.caller;
+        const audio = new Audio('{{url_for('static', filename='user/audios/763380c5-7b3c-4e33-b9af-fe2e50c05e3d.mp3')}}');
+        audio.play(); // Corrected to play the audio
+    });
+    socket.on('ring_tone', function() {
+        const ringAudio = new Audio('{{ url_for('static', filename='user/audios/your_ringing_tone.mp3') }}');
+        ringAudio.loop = true; // Set loop to true for continuous ringing
+        ringAudio.play();
+    });
+
+    const notifyList = document.getElementById('notificationList');
+	socket.on('notification', (data) => {
+		notifyList.innerHTML = '';
+		for (const message of data.messages){
+			const li = document.createElement('li');
+			li.textContent = message.message;
+			if (message.sender_id){
+				li.innerHTML += `(from user ${message.sender_id})`;
+			}
+			notifyList.appendChild(li);
+
+		}
+	});
+    
+       
+});
+function getRoomKey(){
+    return "{{roomid.key}}";
+}
+
+function getRoomId(){
+    userId = "{{user.id}}";
+    otherId = "{{other.id}}";
+    if(userId === otherId){
+        return "{{user.id}}";
+    } else {
+        return "{{other.id}}";
+    }
+}
+
+
+
+</script>

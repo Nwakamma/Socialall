@@ -1,0 +1,32 @@
+/* styles.css */
+#chat-window {
+    height: auto;
+    overflow-y: scroll;
+    
+    border-radius: 2pc;
+}
+
+.message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.sender {
+    background-color: #007bff;
+    border-radius: 3pc;
+    width: auto;
+    color: #fff;
+    text-align: right;
+}
+
+#message_input{
+    width: 15pc;
+    border-radius: 5pc;
+    
+}
+
+.receiver {
+    background-color: #f8f9fa;
+    text-align: left;
+}

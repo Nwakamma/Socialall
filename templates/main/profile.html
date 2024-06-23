@@ -1,0 +1,461 @@
+{% extends "main/main.html" %}
+{% block content %}
+<div class="max-w-[1065px] mx-auto max-lg:-m-2.5">
+            
+    <!-- cover  -->
+    <div class="bg-white shadow lg:rounded-b-2xl lg:-mt-10 dark:bg-dark2">
+
+        <!-- cover -->
+        <div class="relative overflow-hidden w-full lg:h-72 h-48">
+            <img src="{{url_for('static', filename='user/imgs/' + other.cover_photo)}}" alt="" class="h-full w-full object-cover inset-0">
+
+            <!-- overly -->
+            <div class="w-full bottom-0 absolute left-0 bg-gradient-to-t from-black/60 pt-20 z-10"></div>
+            {% if own_profile %}
+            <div class="absolute bottom-0 right-0 m-4 z-20">
+                <div class="flex items-center gap-3">
+                   
+                    <!-- <button class="button bg-white/20 text-white flex items-center gap-2 backdrop-blur-small">Crop</button> -->
+                    <button class="button bg-black/10 text-white flex items-center gap-2 backdrop-blur-small" uk-toggle="target: #updateprofile">Edit</button>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+
+        <!-- user info -->
+        <div class="p-3">
+
+            <div class="flex flex-col justify-center md:items-center lg:-mt-48 -mt-28">
+
+                <div class="relative lg:h-48 lg:w-48 w-28 h-28 mb-4 z-10">
+                    <div class="relative overflow-hidden rounded-full md:border-[6px] border-gray-100 shrink-0 dark:border-slate-900 shadow">
+                        <img src="{{url_for('static', filename='user/imgs/' + other.profile_photo)}}" alt="" class="h-full w-full object-cover inset-0">                           
+                    </div>
+                    <br>
+                    {% if own_profile %}
+                    <button type="button" uk-toggle="target: #updateprofile" class="absolute -bottom-3 left-1/2 -translate-x-1/2 bg-white shadow p-1.5 rounded-full sm:flex">  <ion-icon name="camera" class="text-2xl md hydrated" role="img" aria-label="camera"></ion-icon></button>
+                    {% endif %}
+                </div>
+                <br>
+                <h3 class="md:text-3xl text-base font-bold text-black dark:text-white"> {{other.lastname}} {{other.firstname}} </h3>
+
+                <p class="mt-2 text-gray-500 dark:text-white/80"> {% if user.Bio == None %} {% else %} {{user.Bio}} {% endif %}   <a href="{{url_for('settings', username=user.username)}}" class="text-blue-500 ml-4 inline-block"> {% if own_profile %} Edit {% endif %} </a></p>
+                <br>
+                <div>
+                    <ul>
+                        <li>{{ follow_count }}</li>
+                    </ul>
+                </div>
+                <br>
+                {% if have_follows %}
+                {% if need %}
+                <a href="{{url_for('messenger', username=other.username)}}">
+                    <button class="btn btn-outline">Message <span class="material-symbols-outlined"> message</span> </button>
+                </a>
+                {% endif %}
+                {% endif %}
+
+                <p class="mt-2 max-w-xl text-sm md:font-normal font-light text-center hidden"> {{other.Bio}} </p>
+
+            </div>
+
+        </div>
+
+        <!-- navigations -->
+        <div class="flex items-center justify-between mt-3 border-t border-gray-100 px-2 max-lg:flex-col dark:border-slate-700" 
+             uk-sticky="offset:50; cls-active: bg-white/80 shadow rounded-b-2xl z-50 backdrop-blur-xl dark:!bg-slate-700/80; animation:uk-animation-slide-top ; media: 992">
+            
+            <div class="flex items-center gap-2 text-sm py-2 pr-1 max-md:w-full lg:order-2">
+                {% if own_profile %}
+                <button uk-toggle="target: #create-story" class="button bg-primary flex items-center gap-2 text-white py-2 px-3.5 max-md:flex-1">  
+                    <ion-icon name="add-circle" class="text-xl"></ion-icon> 
+                    <span  class="text-sm"> Add Your Story  </span>
+                </button>
+                 {% endif %}
+                <button type="submit" class="rounded-lg bg-secondery flex px-2.5 py-2 dark:bg-dark2"> 
+                    <ion-icon name="search" class="text-xl">
+                </button>
+
+                <div> 
+                    <button type="submit" class="rounded-lg bg-secondery flex px-2.5 py-2 dark:bg-dark3"> 
+                        <ion-icon name="ellipsis-horizontal" class="text-xl">
+                    </button>
+                    <div  class="w-[240px]" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click;offset:10"> 
+                        <nav>
+                            
+                            
+                            {% if own_profile %} 
+                              
+                            <a href="#"> <ion-icon class="text-xl" name="share-outline"></ion-icon> Share profile </a> 
+                            {% endif %} 
+                            {% if not own_profile %}
+                            {% if not have_follows %}
+                            <form action="/follow/{{other.id}}" method="post">
+                            <a href="#" > &ensp; <ion-icon class="text-xl" name="pricetags-outline"></ion-icon> &ensp;<button class="btn btn-outline" > {{acc}}</button> </a>
+                            </form>
+                            {% endif %}
+                            {% if follows %}
+                            {% if not have_follows %}
+                            <form action="/follow/{{other.id}}" method="post">
+                            <a href="#"> &ensp; <ion-icon class="text-xl" name="pricetags-outline"></ion-icon> &ensp;<button class="btn btn-outline">Pending Follow</button> </a>
+                            </form>
+                            {% endif %}
+                            {% endif %}
+                            {% if have_follows %}
+                            {% if need %}
+                            <form action="/unfollow/{{other.id}}" method="post">
+                            <a href="#"> &ensp; <ion-icon class="text-xl" name="pricetags-outline"></ion-icon> &ensp;<button class="btn btn-outline">Unfollow</button> </a>
+                            </form>
+                            {% endif %}
+                            {% endif %}
+                            {% if have_follows %}
+                            {% if not need %}
+                            <form action="/unfollow/{{other.id}}" method="post">
+                            <a href="#"> &ensp; <ion-icon class="text-xl" name="pricetags-outline"></ion-icon> &ensp;<button class="btn btn-outline"> Pending Follow</button> </a>
+                            </form>
+                            {% endif %}
+                            {% endif %}
+                            <a href="#"> <ion-icon class="text-xl" name="time-outline"></ion-icon>  Mute story </a>  
+                            <a href="#"> <ion-icon class="text-xl" name="flag-outline"></ion-icon>  Report </a>  
+                            <a href="#"> <ion-icon class="text-xl" name="share-outline"></ion-icon> Share profile </a>  
+                            <hr>
+                            <a href="#" class="text-red-400 hover:!bg-red-50 dark:hover:!bg-red-500/50"> <ion-icon class="text-xl" name="stop-circle-outline"></ion-icon>  Block </a>  
+                            {% endif %}
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <nav class="flex gap-0.5 rounded-xl -mb-px text-gray-600 font-medium text-[15px]  dark:text-white max-md:w-full max-md:overflow-x-auto">
+                <a href="#" class="inline-block  py-3 leading-8 px-3.5 border-b-2 border-blue-600 text-blue-600">Timeline</a>
+                <!-- <a href="#" class="inline-block py-3 leading-8 px-3.5">Friend <span class="text-xs pl-2 font-normal lg:inline-block hidden">2,680</span></a>
+                <a href="#" class="inline-block py-3 leading-8 px-3.5">Photo</a>
+                <a href="#" class="inline-block py-3 leading-8 px-3.5">Photo</a>
+                <a href="#" class="inline-block py-3 leading-8 px-3.5">Photo</a>
+                <a href="#" class="inline-block py-3 leading-8 px-3.5">Video</a>
+                <a href="#" class="inline-block py-3 leading-8 px-3.5">Group</a> -->
+             
+                <!-- dropdown -->
+                <div>
+                    <a href="#" class="inline-flex items-center gap-2 py-3 leading-8 px-3"> 
+                        More <ion-icon name="chevron-down"></ion-icon>
+                    </a>
+                    <div  class="md:w-[240px] w-screen" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-right; animate-out: true; mode: click;offset:-4"> 
+                        <nav class="text-[15px]">
+                            <!-- <a href="#"> Likes </a>  
+                            <a href="#"> Music </a>  
+                            <a href="#"> Events </a>  
+                            <a href="#"> Books </a>  
+                            <a href="#"> Reviews given </a>  
+                            <a href="#"> Groups  </a>  
+                            <a href="#"> Manage Sections  </a>   -->
+                        </nav>
+                    </div>
+                </div>
+                 
+            </nav>
+
+        </div>
+
+    </div>
+
+    <div class="flex 2xl:gap-12 gap-10 mt-8 max-lg:flex-col" id="js-oversized">
+
+        <!-- feed story -->
+
+        <div class="flex-1 xl:space-y-6 space-y-3">
+            
+            <!-- add story -->
+            <div class="bg-white rounded-xl shadow-sm p-4 space-y-4 text-sm font-medium border1 dark:bg-dark2">
+
+                <div class="flex items-center gap-3">
+                    <div class="flex-1 bg-slate-100 hover:bg-opacity-80 transition-all rounded-lg cursor-pointer dark:bg-dark3" uk-toggle="target: #create-status"> 
+                        <div class="py-2.5 text-center dark:text-white"> What do you have in mind? </div>
+                    </div>
+                    <div class="cursor-pointer hover:bg-opacity-80 p-1 px-1.5 rounded-lg transition-all bg-pink-100/60 hover:bg-pink-100" uk-toggle="target: #create-status">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 stroke-pink-600 fill-pink-200/70" viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M15 8h.01" />
+                            <path d="M12 3c7.2 0 9 1.8 9 9s-1.8 9 -9 9s-9 -1.8 -9 -9s1.8 -9 9 -9z" />
+                            <path d="M3.5 15.5l4.5 -4.5c.928 -.893 2.072 -.893 3 0l5 5" />
+                            <path d="M14 14l1 -1c.928 -.893 2.072 -.893 3 0l2.5 2.5" />
+                          </svg>
+                    </div>
+                    <div class="cursor-pointer hover:bg-opacity-80 p-1 px-1.5 rounded-lg transition-all bg-sky-100/60 hover:bg-sky-100" uk-toggle="target: #create-status">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 stroke-sky-600 fill-sky-200/70 " viewBox="0 0 24 24" stroke-width="1.5" stroke="#2c3e50" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M15 10l4.553 -2.276a1 1 0 0 1 1.447 .894v6.764a1 1 0 0 1 -1.447 .894l-4.553 -2.276v-4z" />
+                            <path d="M3 6m0 2a2 2 0 0 1 2 -2h8a2 2 0 0 1 2 2v8a2 2 0 0 1 -2 2h-8a2 2 0 0 1 -2 -2z" />
+                        </svg>
+                    </div> 
+                </div>
+                
+            </div>
+            <!--custom-->
+            {% include "cover-edit.html" %}
+            <!--  post image-->
+            {% include "add-story.html" %}
+            {% include "makeposts.html" %}
+            {% include "flash.html" %}
+
+            {% include "posts.html" %}
+
+            <!-- placeholder -->
+            <div class="rounded-xl shadow-sm p-4 space-y-4 bg-slate-200/40 animate-pulse border1 dark:bg-dark2">
+
+                <div class="flex gap-3">
+                    <div class="w-9 h-9 rounded-full bg-slate-300/20"></div>
+                    <div class="flex-1 space-y-3">
+                        <div class="w-40 h-5 rounded-md bg-slate-300/20"></div>
+                        <div class="w-24 h-4 rounded-md bg-slate-300/20"></div>
+                    </div>
+                    <div class="w-6 h-6 rounded-full bg-slate-300/20"></div>
+                </div>
+
+                <div class="w-full h-52 rounded-lg bg-slate-300/10 my-3"> </div>
+
+                <div class="flex gap-3">
+
+                    <div class="w-16 h-5 rounded-md bg-slate-300/20"></div>
+
+                    <div class="w-14 h-5 rounded-md bg-slate-300/20"></div>
+
+                    <div class="w-6 h-6 rounded-full bg-slate-300/20 ml-auto"></div>
+                    <div class="w-6 h-6 rounded-full bg-slate-300/20  "></div>
+                </div>
+
+            </div>
+
+
+        </div>
+
+        <!-- sidebar -->
+         
+        <div class="lg:w-[400px]"> 
+
+            <div class="lg:space-y-4 lg:pb-8 max-lg:grid sm:grid-cols-2 max-lg:gap-6" 
+                 uk-sticky="media: 1024; end: #js-oversized; offset: 80">
+
+                <div class="box p-5 px-6">
+
+                    <div class="flex items-ce justify-between text-black dark:text-white">
+                        <h3 class="font-bold text-lg"> Intro   </h3>
+                        <a href="#" class="text-sm text-blue-500">Edit</a>
+                    </div>
+
+                    <ul class="text-gray-700 space-y-4 mt-4 text-sm dark:text-white/80">
+
+                        <li class="flex items-center gap-3"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                            </svg> 
+                            <div>  Live In <span class="font-semibold text-black dark:text-white"> {{other.current_city}}  </span> </div>
+                        </li>
+                        <!-- <li class="flex items-center gap-3"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342M6.75 15a.75.75 0 100-1.5.75.75 0 000 1.5zm0 0v-3.675A55.378 55.378 0 0112 8.443m-7.007 11.55A5.981 5.981 0 006.75 15.75v-1.5" />
+                            </svg>
+                            <div>  Studied at <span class="font-semibold text-black dark:text-white"> University of Turkey  </span> </div>
+                        </li> -->
+                        <!-- <li class="flex items-center gap-3"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" />
+                            </svg>
+                            
+                            <div>  Works at <span class="font-semibold text-black dark:text-white">  Envanto Martket </span> </div>
+                        </li> -->
+                        <!-- <li class="flex items-center gap-3"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
+                            </svg>
+                            <div> In <span class="font-semibold text-black dark:text-white"> Relationship  </span></div>
+                        </li> -->
+                        <!-- <li class="flex items-center gap-3"> 
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12.75 19.5v-.75a7.5 7.5 0 00-7.5-7.5H4.5m0-6.75h.75c7.87 0 14.25 6.38 14.25 14.25v.75M6 18.75a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
+                            </svg>
+                            <div>  Followed By <span class="font-semibold text-black dark:text-white"> 3,240 People </span> </div>
+                        </li> -->
+                
+                    </ul>
+
+                    <!-- Hobbies -->
+                    <div class="flex flex-wrap gap-1 text-sm mt-4 font-semibold capitalize">
+                        <div class="inline-flex items-center gap-2 py-0.5 px-2.5 border shadow rounded-full border-gray-100">
+                            Shoping
+                        </div>
+                        <div class="inline-flex items-center gap-2 py-0.5 px-2.5 border shadow rounded-full border-gray-100">
+                            code
+                        </div>
+                        <div class="inline-flex items-center gap-2 py-0.5 px-2.5 border shadow rounded-full border-gray-100">
+                            art
+                        </div>
+                        <div class="inline-flex items-center gap-2 py-0.5 px-2.5 border shadow rounded-full border-gray-100">
+                            design
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-1 text-center text-sm mt-4 mb-2 rounded-lg overflow-hidden">
+                        {% for image in images %}
+
+                        <div class="relative w-full aspect-[4/3]">
+                            <a class="inline" href="">
+                                <img src="{{url_for('static', filename='user/imgs/' + image.file_info)}}" alt="" class="object-cover w-full h-full inset-0">
+                            </a>
+                        </div> 
+                        {% endfor %}
+                        <!-- <div class="relative w-full aspect-[4/3]">
+                            <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-7.jpg" alt="" class="object-cover w-full h-full inset-0">
+                        </div> 
+                        <div class="relative w-full aspect-[4/3]">
+                            <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-4.jpg" alt="" class="object-cover w-full h-full inset-0">
+                        </div> 
+                        <div class="relative w-full aspect-[4/3]">
+                            <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-6.jpg" alt="" class="object-cover w-full h-full inset-0">
+                        </div>  -->
+
+                    </div>
+                    
+                </div>
+                
+                <div class="box p-5 px-6">
+
+                    <div class="flex items-ce justify-between text-black dark:text-white">
+                        <h3 class="font-bold text-lg"> Followers  
+                            <span class="block text-sm text-gray-500 mt-0. font-normal dark:text-white"> {{follow_count}} Followers </span> 
+                        </h3>
+                        <a href="#" class="text-sm text-blue-500"></a>
+                    </div>
+                
+                    <div class="grid grid-cols-3 gap-2 gap-y-5 text-center text-sm mt-4 mb-2">
+                        {% for foll in follower %}
+                        <div>
+                            <a href="{{url_for('profile', username=foll.username)}}">
+                                <div class="relative w-full aspect-square rounded-lg overflow-hidden">
+                                    <img src="{{url_for('static', filename='user/imgs/' + foll.profile_photo)}}" alt="" class="object-cover w-full h-full inset-0">
+                                </div> 
+                            </a>
+                            <div class="mt-2 line-clamp-1"> {{foll.lastname}} {{foll.firstname}} </div>
+                        </div>
+                        {% endfor %}
+                        
+                        
+                        
+                    </div>
+
+                    
+                </div>
+                
+                <!-- Groups You Manage  -->
+                <div class="bg-white rounded-xl shadow p-5 px-6 border1 dark:bg-dark2">
+                                
+                    <div class="flex items-baseline justify-between text-black dark:text-white">
+                        <h3 class="font-bold text-base"> Suggested Manage </h3>
+                        <a href="#" class="text-sm text-blue-500">See all</a>
+                    </div>
+
+                    <div class="side-list">
+
+                        <div class="side-list-item">
+                            <a href="timeline-group.html">
+                                <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-2.jpg" alt="" class="side-list-image rounded-full">
+                            </a>
+                            <div class="flex-1">
+                                <a href="timeline-group.html"><h4 class="side-list-title">  John Michael</h4></a>
+                                <div class="side-list-info"> Updated 6 day ago </div>
+                            </div>
+                            <button class="button bg-primary-soft dark:text-white">Like</button>
+                        </div>
+                        <div class="side-list-item">
+                            <a href="timeline-group.html">
+                                <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-4.jpg" alt="" class="side-list-image rounded-full"> 
+                            </a>
+                            <div class="flex-1">
+                                <a href="timeline-group.html"><h4 class="side-list-title"> Martin Gray</h4></a>
+                                <div class="side-list-info"> Updated 2 month ago </div>
+                            </div>
+                            <button class="button bg-primary-soft dark:text-white">Like</button>
+                        </div>  
+                        <div class="side-list-item">
+                            <a href="timeline-group.html">
+                                <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-3.jpg" alt="" class="side-list-image rounded-full">
+                            </a>
+                            <div class="flex-1">
+                                <a href="timeline-group.html"><h4 class="side-list-title"> Monroe Parker</h4></a>
+                                <div class="side-list-info"> Updated 1 week ago </div>
+                            </div>
+                            <button class="button bg-primary-soft dark:text-white">Like</button>
+                        </div>  
+                        <div class="side-list-item">
+                            <a href="timeline-group.html">
+                                <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-1.jpg" alt="" class="side-list-image rounded-full">
+                            </a>
+                            <div class="flex-1">
+                                <a href="timeline-group.html"><h4 class="side-list-title"> Jesse Steeve</h4></a>
+                                <div class="side-list-info"> Updated 2 day ago </div>
+                            </div>
+                            <button class="button bg-primary-soft dark:text-white">Like</button>
+                        </div>  
+                        
+                    </div>
+
+                    <button class="bg-secondery w-full text-black py-1.5 font-medium px-3.5 rounded-md text-sm mt-2 dark:text-white">See all</button>
+
+                </div>
+
+                <!-- Groups You Manage  -->
+                <div class="bg-white rounded-xl shadow p-5 px-6 border1 dark:bg-dark2">
+                                
+                    <div class="flex items-baseline justify-between text-black dark:text-white">
+                        <h3 class="font-bold text-base"> Suggested Manage </h3>
+                        <a href="#" class="text-sm text-blue-500">See all</a>
+                    </div>
+
+                    <div class="side-list">
+
+                        <div class="side-list-item">
+                            <a href="timeline-group.html">
+                                <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-2.jpg" alt="" class="side-list-image rounded-md">
+                            </a>
+                            <div class="flex-1">
+                                <a href="timeline-group.html"><h4 class="side-list-title">  John Michael</h4></a>
+                                <div class="side-list-info"> Updated 1 week ago </div>
+                            </div>
+                            <button class="button bg-primary text-white">Like</button>
+                        </div>
+                        <div class="side-list-item">
+                            <a href="timeline-group.html">
+                                <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-4.jpg" alt="" class="side-list-image rounded-md"> 
+                            </a>
+                            <div class="flex-1">
+                                <a href="timeline-group.html"><h4 class="side-list-title"> Martin Gray</h4></a>
+                                <div class="side-list-info"> Updated 4 week ago </div>
+                            </div>
+                            <button class="button bg-primary text-white">Like</button>
+                        </div>  
+                        <div class="side-list-item">
+                            <a href="timeline-group.html">
+                                <img src="https://demo.foxthemes.net/socialite-v3.0/assets/images/avatars/avatar-3.jpg" alt="" class="side-list-image rounded-md">
+                            </a>
+                            <div class="flex-1">
+                                <a href="timeline-group.html"><h4 class="side-list-title"> Monroe Parker</h4></a>
+                                <div class="side-list-info"> Updated 2 month ago </div>
+                            </div>
+                            <button class="button bg-primary text-white">Like</button>
+                        </div>  
+                    
+                        
+                    </div>
+
+                </div>
+
+            </div>
+            
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

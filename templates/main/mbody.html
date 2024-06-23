@@ -1,0 +1,408 @@
+<style>
+    .message {
+      padding: 10px;
+      margin-bottom: 5px;
+      border-radius: 5px;
+    }
+    .sender_message {
+      max-width: 40%;
+      position: relative;
+      left: 60%;
+      text-align: right;
+      
+    }
+    .receiver_message {
+      max-width: 40%;
+      text-align: left;
+      
+    }
+  </style>
+
+<div id="previewId" style="display: none;"  class="flex-1">
+    <span class="material-symbols-outlined" id="closePreview">close</span>
+    <form action="/mess_uplaod/{{other.username}}" method="post" enctype="multipart/form-data">
+        <label for="mess_m">
+            <input type="file" multiple hidden id="mess_m" name="media" accept="image/*, video/*" class="bg-sky-50 text-sky-600 border border-sky-100 shadow-sm p-2.5 rounded-full shrink-0 duration-100 hover:scale-[1.15] dark:bg-dark3 dark:border-0">
+            <ion-icon class="text-3xl flex" name="image"></ion-icon>
+        
+        </label>
+        <div class="flex items-center justify-between gap-2 w- px-6 py-3.5 z-10 border-b dark:border-slate-700 uk-animation-slide-top-medium">
+            <div  class="w-full p-5 py-10 overflow-y-auto md:h-[calc(100vh-204px)] h-[calc(100vh-195px)]">
+                <div id="preview"></div>
+            </div>
+            <button id="mess_upload_Submit" type="submit"><ion-icon class="text-xl flex" name="send-outline"></ion-icon></button>
+        </div>
+    </form>
+    
+    
+</div>
+<div class="flex-1" id="mainDiv">
+
+    <!-- chat heading -->
+    <div class="flex items-center justify-between gap-2 w- px-6 py-3.5 z-10 border-b dark:border-slate-700 uk-animation-slide-top-medium">
+
+        <div class="flex items-center sm:gap-4 gap-2">
+
+            <!-- toggle for mobile -->
+            <button type="button" class="md:hidden" uk-toggle="target: #side-chat ; cls: max-md:-translate-x-full">
+                <ion-icon name="chevron-back-outline" class="text-2xl -ml-4"></ion-icon>
+            </button>
+
+            <div class="relative cursor-pointer max-md:hidden"  uk-toggle="target: .rightt ; cls: hidden">
+                <img src="{{url_for('static', filename='user/imgs/' + other.profile_photo )}}" alt="" class="w-8 h-8 rounded-full shadow">
+                {% if not tags %}<div class="w-2 h-2 bg-red-600 rounded-full absolute right-0 bottom-0 m-px"></div>{% endif %}
+                {% if tags %}<div class="w-2 h-2 bg-green-500 rounded-full absolute right-0 bottom-0 m-px"></div>{% endif %}
+            </div>
+            <div class="cursor-pointer" uk-toggle="target: .rightt ; cls: hidden">
+                <div class="text-base font-bold"> {{other.lastname}} {{other.firstname}} </div>
+                {% if tags %}<div class="text-xs text-green-500 font-semibold"> {{on}}</div>{% endif %}
+                {% if not tags %}<div class="text-xs text-red-500 font-semibold"> {{on}}</div>{% endif %}
+                <div id="typingIndicator"></div>
+            </div>
+
+        </div>
+
+        <div class="flex items-center gap-2">
+            <!-- <a href="{{url_for('tw.index', username=other.username)}}">
+                <button type="button" id="callBtn" class="button__ico">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-6 h-6">
+                        <path fill-rule="evenodd" d="M2 3.5A1.5 1.5 0 013.5 2h1.148a1.5 1.5 0 011.465 1.175l.716 3.223a1.5 1.5 0 01-1.052 1.767l-.933.267c-.41.117-.643.555-.48.95a11.542 11.542 0 006.254 6.254c.395.163.833-.07.95-.48l.267-.933a1.5 1.5 0 011.767-1.052l3.223.716A1.5 1.5 0 0118 15.352V16.5a1.5 1.5 0 01-1.5 1.5H15c-1.149 0-2.263-.15-3.326-.43A13.022 13.022 0 012.43 8.326 13.019 13.019 0 012 5V3.5z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </a>
+            <a href="{{url_for('tw.index', username=other.username)}}">
+                <button type="button" id="callBtn" class="hover:bg-slate-100 p-1.5 rounded-full">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+                    </svg>
+                </button>
+            </a> -->
+            <!-- <button type="button" id="callBtn" class="hover:bg-slate-100 p-1.5 rounded-full">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" d="M15.75 10.5l4.72-4.72a.75.75 0 011.28.53v11.38a.75.75 0 01-1.28.53l-4.72-4.72M4.5 18.75h9a2.25 2.25 0 002.25-2.25v-9a2.25 2.25 0 00-2.25-2.25h-9A2.25 2.25 0 002.25 7.5v9a2.25 2.25 0 002.25 2.25z" />
+                </svg>
+            </button> -->
+            <button type="button" class="hover:bg-slate-100 p-1.5 rounded-full" uk-toggle="target: .rightt ; cls: hidden">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+                  </svg>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- chats bubble -->
+    <div class="w-full p-5 py-10 overflow-y-auto md:h-[calc(100vh-204px)] h-[calc(100vh-195px)]">
+
+        <div class="py-10 text-center text-sm lg:pt-8">
+            <img src="{{url_for('static', filename='user/imgs/' + other.profile_photo )}}" class="w-24 h-24 rounded-full mx-auto mb-3" alt="">
+            <div class="mt-8">
+                <div class="md:text-xl text-base font-medium text-black dark:text-white"> {{other.lastname}} {{other.firstname}} </div>
+                <div class="text-gray-500 text-sm   dark:text-white/80"> @{{other.username}} </div>
+            </div>
+            <div class="mt-3.5">
+                 <a href="{{url_for('profile', username=other.username)}}" class="inline-block rounded-lg px-4 py-1.5 text-sm font-semibold bg-secondery">View profile</a>
+            </div>
+        </div>
+
+        <div class="text-sm font-medium space-y-6">
+            {% for message in mess %}
+            {% if message.sender_id != user.id %}
+            <!-- received -->
+            {% if message.body %}
+            <div class="flex gap-3">
+                <img src="{{url_for('static', filename='user/imgs/' + message.sender.profile_photo )}}" alt="" class="w-9 h-9 rounded-full shadow">
+                <div id="chat" class="px-4 py-2 rounded-[20px] max-w-sm bg-secondery"> {% if message.body == None %} {% else %} {{message.body}} {% endif %} </div>
+                
+            </div>
+            {% endif %}
+            {% if message.image %}
+            <div class="flex gap-3">
+                <img src="{{url_for('static', filename='user/imgs/' + user.profile_photo )}}" alt="" class="w-5 h-5 rounded-full shadow">
+                <div id="chat" class="px-4 py-2 rounded-[20px] max-w-sm bg-gradient-to-tr from-sky-500 to-blue-500 text-white shadow"> <img src="{{url_for('static', filename='user/imgs/' + message.image)}}" alt="Description of the image" style="width:100%;height:auto;">  </div>
+                
+            </div>
+            {% endif %}
+            {% if message.video %}
+            <div class="flex gap-3">
+                <img src="{{url_for('static', filename='user/imgs/' + user.profile_photo )}}" alt="" class="w-5 h-5 rounded-full shadow">
+                <div id="chat" class="px-4 py-2 rounded-[20px] max-w-sm bg-gradient-to-tr from-sky-500 to-blue-500 text-white shadow">
+                 <video width="320" height="240" controls>
+                    <source src="{{url_for('static', filename='user/videos/' + message.video)}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video> </div>
+               
+            </div>
+            {% endif %}
+            {% endif %}
+            {% if message.sender_id == user.id %}
+            <!-- sent -->
+            {% if message.body %}
+            <div class="flex gap-2 flex-row-reverse items-end">
+                <img src="{{url_for('static', filename='user/imgs/' + user.profile_photo )}}" alt="" class="w-5 h-5 rounded-full shadow">
+                <div id="chat" class="px-4 py-2 rounded-[20px] max-w-sm bg-gradient-to-tr from-sky-500 to-blue-500 text-white shadow"> {% if message.body == None %} {% else %} {{message.body}} {% endif %} </div>
+                
+            </div>
+            {% endif %}
+            {% if message.image %}
+            <div class="flex gap-2 flex-row-reverse items-end">
+                <img src="{{url_for('static', filename='user/imgs/' + user.profile_photo )}}" alt="" class="w-5 h-5 rounded-full shadow">
+                <div id="chat" class="px-4 py-2 rounded-[20px] max-w-sm bg-gradient-to-tr from-sky-500 to-blue-500 text-white shadow"> <img src="{{url_for('static', filename='user/imgs/' + message.image)}}" alt="Description of the image" style="width:100%;height:auto;">  </div>
+                
+            </div>
+            {% endif %}
+            {% if message.video %}
+            <div class="flex gap-2 flex-row-reverse items-end">
+                <img src="{{url_for('static', filename='user/imgs/' + user.profile_photo )}}" alt="" class="w-5 h-5 rounded-full shadow">
+                <div id="chat" class="px-4 py-2 rounded-[20px] max-w-sm bg-gradient-to-tr from-sky-500 to-blue-500 text-white shadow"> <video width="320" height="240" controls>
+                    <source src="{{url_for('static', filename='user/videos/' + message.video)}}" type="video/mp4">
+                    Your browser does not support the video tag.
+                  </video> </div>
+               
+            </div>
+            {% endif %}
+            {% endif %}
+            
+            <!-- <div class="">
+                <img src="{{url_for('static', filename='user/imgs/' + other.profile_photo )}}" alt="" class="w-5 h-5 rounded-full shadow">
+                <div id="messages_container" class="px-4 py-2 rounded-[20px] max-w-sm bg-gradient-to-tr from-sky-500 to-blue-500 text-white shadow"> </div>
+            </div> -->
+
+            <!-- time -->
+            <!-- <div class="flex justify-center ">
+                <div class="font-medium text-gray-500 text-sm dark:text-white/70">
+                    April 8,2023,6:30 AM
+                </div>
+            </div> -->
+            {% endfor %}
+            <!-- <ul id="message-list"></ul> -->
+             <ul id="mainmess">
+                
+             </ul>
+
+        </div>
+
+    </div>
+    
+
+    <!-- sending message area -->
+    <div style="display: none;" id="fileUpload" class="sm:w-full p-3 flex justify-center gap-5" uk-scrollspy="target: > button; cls: uk-animation-slide-bottom-small; delay: 100;repeat:true">
+
+        <button id="TriggerInput">
+            <ion-icon id="mess_ml" class="text-3xl flex" name="image"></ion-icon>
+        </button>
+
+
+    </div>
+    <div class="flex items-center md:gap-4 gap-2 md:p-3 p-2 overflow-hidden">
+        
+
+        <div id="message__wrap" class="flex items-center gap-2 h-full dark:text-white -mt-1.5">
+
+            <button type="button" onclick="showfileUpload()"  class="shrink-0">
+                <ion-icon class="text-3xl flex" name="add-circle-outline"></ion-icon>
+            </button>
+            <script>
+                function showfileUpload(){
+                    const fileUpload = document.getElementById('fileUpload');
+                    if (fileUpload.style.display === 'none'){
+                        fileUpload.style.display = 'block';
+                    } else {
+                        fileUpload.style.display = 'none';
+                    }
+                    
+                }
+            </script>
+            <div class="dropbar pt-36 h-60 bg-gradient-to-t via-white from-white via-30% from-30% dark:from-slate-900 dark:via-900" uk-drop="stretch: x; target: #message__wrap ;animation:  slide-bottom ;animate-out: true; pos: top-left; offset:10 ; mode: click ; duration: 200">
+
+                <!-- <div class="sm:w-full p-3 flex justify-center gap-5" uk-scrollspy="target: > button; cls: uk-animation-slide-bottom-small; delay: 100;repeat:true">
+
+                    <label for="mess_m">
+                        <input type="file" hidden id="mess_m" name="media" accept="image/*, video/*" class="bg-sky-50 text-sky-600 border border-sky-100 shadow-sm p-2.5 rounded-full shrink-0 duration-100 hover:scale-[1.15] dark:bg-dark3 dark:border-0">
+                        <ion-icon class="text-3xl flex" name="image"></ion-icon>
+                    
+                    </label>
+                    
+                    </button>
+
+
+                </div> -->
+
+            </div>
+
+            <!-- <button type="button"  class="shrink-0">
+                <ion-icon class="text-3xl flex" name="happy-outline"></ion-icon>
+            </button> -->
+            <div class="dropbar p-2" hidden uk-drop="stretch: x; target: #message__wrap ;animation: uk-animation-scale-up uk-transform-origin-bottom-left ;animate-out: true; pos: top-left ; offset:2; mode: click ; duration: 200 ">
+
+                <div class="sm:w-60 bg-white shadow-lg border rounded-xl  pr-0 dark:border-slate-700 dark:bg-dark3">
+
+                    <h4 class="text-sm font-semibold p-3 pb-0">Send Imogi</h4> 
+
+                    <div class="grid grid-cols-5 overflow-y-auto max-h-44 p-3 text-center text-xl">
+
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😊 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 🤩 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😎</div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 🥳 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😂 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 🥰 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😡 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😊 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 🤩 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😎</div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 🥳 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😂 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 🥰 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😡 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 🤔 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😊 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 🤩 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😎</div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 🥳 </div>
+                        <div class="hover:bg-secondery p-1.5 rounded-md hover:scale-125 cursor-pointer duration-200"> 😂 </div>
+
+                    </div>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="relative flex-1">
+            <textarea id="message_input" placeholder="Write your message" rows="1" class="w-full resize-none bg-secondery rounded-full px-4 p-2"></textarea>
+           
+            <button type="submit" id="send_button" class="text-blue-500 shrink-0 p-2 absolute right-0.5 top-0">
+                <ion-icon class="text-xl flex" name="send-outline"></ion-icon>
+            </button>
+            
+
+        </div>
+        
+
+        <!-- <button type="button" class="flex h-full dark:text-white">
+            <ion-icon class="text-3xl flex -mt-3" name="heart-outline"></ion-icon>
+        </button> -->
+
+    </div>
+    
+
+</div>
+
+
+<!-- <script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+    document.getElementById('callBtn').onclick = () => {
+        const receiver = "{{other.id}}"; // Make sure this is rendered correctly
+        const caller = "{{other.id}}";   // Make sure this is rendered correctly
+        const room = "{{roomid.key}}";   // Make sure this is rendered correctly
+        socket.emit('call_not', {'receiver': receiver, 'caller': caller, 'room': room});
+    };
+
+    socket.on('call_not', function(data) {
+        const CallerDiv = document.getElementById('ringingScreen');
+        CallerDiv.style.display = 'block';
+        CallerDiv.innerHTML = data.caller;
+        const audio = new Audio('{{url_for('static', filename='user/audios/763380c5-7b3c-4e33-b9af-fe2e50c05e3d.mp3')}}');
+        audio.play(); // Corrected to play the audio
+    });
+    socket.on('ring_tone', function() {
+        const ringAudio = new Audio('{{ url_for('static', filename='user/audios/your_ringing_tone.mp3') }}');
+        ringAudio.loop = true; // Set loop to true for continuous ringing
+        ringAudio.play();
+    });
+    
+    
+});
+
+</script> -->
+
+
+
+<script>
+    document.getElementById('messageform').addEventListener('submit', function(e){
+        e.preventDefault();
+        const formdata = new FormData(this);
+        const username = "{{ other.username }}"; // Make sure this template variable is rendered correctly
+        fetch('/mess_uplaod/' + username, {
+            method: 'POST',
+            body: formdata
+        })
+        .then(response => {
+            if (!response.ok){
+                throw new Error('Network error');
+            }
+            return response.text();
+        })
+        .then(result => {
+            console.log('Success', result);
+            // You might want to update the UI here to show the success status
+        })
+        .catch(error => { // Fixed the syntax error here
+            console.error('Error:', error);
+            // You might want to update the UI here to show the error status
+        });
+    });
+</script>
+
+<script>
+    document.getElementById('mess_m').addEventListener('change', function(event) {
+      const files = event.target.files;
+      const preview = document.getElementById('preview');
+      const previewId = document.getElementById('previewId');
+      const mainDiv = document.getElementById('mainDiv');
+      const closePreview = document.getElementById('closePreview');
+      
+      // Clear the preview div
+      preview.innerHTML = '';
+  
+      for (const file of files) {
+        const fileType = file['type'];
+        const validImageTypes = ['image/gif', 'image/jpeg', 'image/png'];
+        const validVideoTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+        mainDiv.style.display = 'none';
+        previewId.style.display = 'block';
+
+  
+        if (validImageTypes.includes(fileType)) {
+          // Create an image preview
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(file);
+          img.style.maxWidth = '200px';
+          img.style.maxHeight = '200px';
+          img.onload = function() {
+            URL.revokeObjectURL(img.src); // Free memory
+          };
+          preview.appendChild(img);
+        } else if (validVideoTypes.includes(fileType)) {
+          // Create a video preview
+          const video = document.createElement('video');
+          video.src = URL.createObjectURL(file);
+          video.style.maxWidth = '200px';
+          video.style.maxHeight = '200px';
+          video.controls = true;
+          video.onloadstart = function() {
+            URL.revokeObjectURL(video.src); // Free memory
+          };
+          preview.appendChild(video);
+        }
+      }
+      closePreview.onclick = function(){
+        previewId.style.display = 'none';
+        mainDiv.style.display = 'block';
+      }
+    });
+
+  </script>
+  <script>
+    const mess_m = document.getElementById('mess_m');
+    const TriggerInput = document.getElementById('TriggerInput');
+
+    TriggerInput.addEventListener('click', function(){
+
+        mess_m.click();
+    });
+  </script>

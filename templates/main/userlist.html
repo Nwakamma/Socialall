@@ -1,0 +1,31 @@
+<div class="space-y-2 p-2 overflow-y-auto md:h-[calc(100vh-204px)] h-[calc(100vh-130px)]">
+    {% if not recents %}
+    <p> No message </p>
+    {% endif %}
+    {% for recent in recents %}
+
+    <a href="{{url_for('messenger', username=recent.sender.username)}}" class="relative flex items-center gap-4 p-2 duration-200 rounded-xl hover:bg-secondery">
+        <div class="relative w-14 h-14 shrink-0">
+            <img src="{{url_for('static', filename='user/imgs/' + recent.sender.profile_photo)}}" alt="" class="object-cover w-full h-full rounded-full">
+            
+            {% if recent.sender == other %}
+            {% if not tag %}<div class="w-4 h-4 absolute bottom-0 right-0  bg-red-600 rounded-full border border-white dark:border-slate-800"></div>{% endif %}
+            {% if tag %}<div class="w-4 h-4 absolute bottom-0 right-0  bg-green-500 rounded-full border border-white dark:border-slate-800"></div>{% endif %}
+            {% endif %}
+            {% if recent.sender != other %}
+            {% if not tag[recent.sender] %}<div class="w-4 h-4 absolute bottom-0 right-0  bg-red-600 rounded-full border border-white dark:border-slate-800"></div>{% endif %}
+            {% if tag[recent.sender] %}<div class="w-4 h-4 absolute bottom-0 right-0  bg-green-500 rounded-full border border-white dark:border-slate-800"></div>{% endif %}
+            {% endif %}
+        </div>
+        <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 mb-1.5">
+                <div class="mr-auto text-sm text-black dark:text-white font-medium"> {{recent.sender.lastname}} {{recent.sender.firstname}} </div>
+                <div class="text-xs font-light text-gray-500 dark:text-white/70"> {{recent.timestamp.strftime('%H-%M')}} </div>
+            </div>
+            <div class="font-medium overflow-hidden text-ellipsis text-sm whitespace-nowrap"> {% if recent.body == None %} {% if recent.image %} New photo <span class="material-symbols-outlined"> image </span> {% endif %} {% if recent.video %} New video <span class="material-symbols-outlined">movie</span> {% endif %} {% else %} {{recent.body}} {% endif %} </div>
+        </div>
+    </a>
+    {% endfor %}
+    
+
+</div>

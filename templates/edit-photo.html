@@ -1,0 +1,198 @@
+<!-- choose photo modal start -->
+<link id="change-link" rel="stylesheet" type="text/css" href="{{url_for('static', filename='assets/css/style.css')}}">
+<div class="hidden lg:p-20" id="choosePhoto" uk-modal="">
+    <div class="modal  fade mobile-full-width"  tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered Choose-photo-modal modal-custom-lg" role="document">
+            <form action="/upload" enctype="multipart/form-data" method="post" style="height:inherit;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Choose Photo</h5>
+
+                    <button type="submit" class="btn btn-solid" >
+                        <span aria-hidden="true">&marker;</span>Upload Photo
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-item">
+                            <a id="uploaded-tab" class="nav-link active" data-bs-toggle="tab" href="#uploaded" role="tab"
+                                aria-selected="true">Uploaded</a>
+                        </li>
+                        <li class="nav-item">
+                            <a id="album-tab" class="nav-link" data-bs-toggle="tab" href="#album" role="tab"
+                                aria-selected="false">Photos</a>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content">
+                        <div class="tab-pane fade show active" id="uploaded" role="tabpanel" aria-labelledby="uploaded-tab">
+                            <div class="row gallery-photo ratio_landscape">
+                                {% for image in images %}
+                                <div class="col-sm-4 col-6">
+                                    <label for="chk-ani1"></label>
+                                        <input class="radio_animated" id="chk-ani1" value="{{image.file_info}}" type="radio" name="Radios"
+                                            checked="">
+                                        <div class="image-box">
+                                            <div class="image">
+                                                <img src="{{url_for('static', filename='user/imgs/' + image.file_info)}}"
+                                                    class="img-fluid blur-up lazyload bg-img" alt="">
+                                            </div>
+                                        </div>
+
+                                </div>
+                                {% endfor %}
+
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="album" role="tabpanel" aria-labelledby="album-tab">
+                            <div class="row gallery-album">
+                                <div class="col-6">
+                                    <a class="card add-card"> </a>
+
+                                        <div class="add-icon">
+                                            <i class="iw-30 ih-30" data-feather="plus-circle"></i>
+                                            <input type="file" class="form-control-file" name="photo" id="image-input" accept="image/*" onchange="previewMedia('image')">
+                                            <!-- <input type="file" class="form-control-file"  id="video-input" accept="video/*" onchange="previewMedia('video')">  -->
+
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="card-title">Upload Profile Picture</h5>
+                                        </div>
+
+                                </div>
+
+                                <div class="col-6">
+                                    <a class="card collection">
+                                        <img id="image-preview" class="card-img-top img-fluid blur-up lazyload bg-img"
+                                            style="display: none;" alt="Card image cap">
+
+                                        <video id="video-preview" style="display: none; width: 320px; height: 240px;" autoplay loop></video>
+                                        <div class="card-body">
+                                            <!-- <h5 class="card-title">hh</h5> -->
+                                            <!-- <h6>3 photos</h6> -->
+                                        </div>
+                                    </a>
+                                </div>
+                                {% for album in albums %}
+
+                                <div class="col-6">
+                                    <a class="card collection">
+                                        <img class="card-img-top img-fluid blur-up lazyload bg-img"
+                                            src="{{url_for('static', filename='user/imgs/' + album.image.file_info)}}" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{album.title}}</h5>
+                                            <!-- <h6>3 photos</h6> -->
+                                        </div>
+                                    </a>
+                                </div>
+                                {% endfor %}
+                                <!-- <div class="col-6">
+                                    <a class="card collection">
+                                        <img class="card-img-top img-fluid blur-up lazyload bg-img"
+                                            src="{{url_for('static', filename='assets/images/post/4.jpg')}}" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">profile photos</h5>
+                                            <h6>3 photos</h6>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="col-6">
+                                    <a class="card collection">
+                                        <img class="card-img-top img-fluid blur-up lazyload bg-img"
+                                            src="{{url_for('static', filename='assets/images/post/10.jpg')}}" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">family trip</h5>
+                                            <h6>3 photos</h6>
+                                        </div>
+                                    </a>
+                                </div> -->
+
+                            </div>
+                            <div class="gallery-open">
+                                <div class="close-album">
+                                    <h5>close album</h5>
+                                </div>
+                                <div class="row gallery-photo ratio_landscape">
+                                    {% for image in images %}
+                                    <div class="col-sm-4 col-6">
+                                        <label for="chk-ani11"></label>
+                                            <input class="radio_animated" id="chk-ani11" value="{{image.file_info}}" type="radio" name="Radios1"
+                                                checked="">
+                                            <div class="image-box">
+                                                <div class="image">
+                                                    <img src="{{url_for('static', filename='user/imgs/' + image.file_info)}}"
+                                                        class="img-fluid blur-up lazyload bg-img" alt="">
+                                                </div>
+                                            </div>
+
+                                    </div>
+                                    {% endfor %}
+                                    <!-- <div class="col-sm-4 col-6">
+                                        <label for="chk-ani12"></label>
+                                            <input class="radio_animated" id="chk-ani12" type="radio" name="Radios1">
+                                            <div class="image-box">
+                                                <div class="image">
+                                                    <img src="{{url_for('static', filename='assets/images/post/2.jpg')}}"
+                                                        class="img-fluid blur-up lazyload bg-img" alt="">
+                                                </div>
+                                            </div>
+
+                                    </div>
+                                    <div class="col-sm-4 col-6">
+                                        <label for="chk-ani13"></label>
+                                            <input class="radio_animated" id="chk-ani13" type="radio" name="Radios1">
+                                            <div class="image-box">
+                                                <div class="image">
+                                                    <img src="{{url_for('static', filename='assets/images/post/3.jpg')}}"
+                                                        class="img-fluid blur-up lazyload bg-img" alt="">
+                                                </div>
+                                            </div>
+
+                                    </div>
+                                    <div class="col-sm-4 col-6">
+                                        <label for="chk-ani14"></label>
+                                            <input class="radio_animated" id="chk-ani14" type="radio" name="Radios1">
+                                            <div class="image-box">
+                                                <div class="image">
+                                                    <img src="{{url_for('static', filename='assets/images/post/4.jpg')}}"
+                                                        class="img-fluid blur-up lazyload bg-img" alt="">
+                                                </div>
+                                            </div>
+
+                                    </div>
+                                    <div class="col-sm-4 col-6">
+                                        <label for="chk-ani15"></label>
+                                            <input class="radio_animated" id="chk-ani15" type="radio" name="Radios1">
+                                            <div class="image-box">
+                                                <div class="image">
+                                                    <img src="{{url_for('static', filename='assets/images/post/5.jpg')}}"
+                                                        class="img-fluid blur-up lazyload bg-img" alt="">
+                                                </div>
+                                            </div>
+                                    </div>
+                                    <div class="col-sm-4 col-6">
+                                        <label for="chk-ani16"></label>
+                                            <input class="radio_animated" id="chk-ani16" type="radio" name="Radios1">
+                                            <div class="image-box">
+                                                <div class="image">
+                                                    <img src="{{url_for('static', filename='assets/images/post/6.jpg')}}"
+                                                        class="img-fluid blur-up lazyload bg-img" alt="">
+                                                </div>
+                                            </div>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-solid">choose Photo</button>
+                </div>
+            </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+
+    <!-- choose photo modal end -->

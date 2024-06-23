@@ -1,0 +1,186 @@
+<div class="create-post">
+    <!--for flash-->
+        <div id="flash-message" class="hidden">
+            <span id="flash-icon"><!-- Icon will be inserted here --></span>
+            <span id="flash-text"><!-- Message will be inserted here --></span>
+          </div>
+          <form action="/create" method="post" enctype="multipart/form-data">
+                            <div class="static-section">
+                                <div class="card-title">
+                                    <h3>create post</h3>
+                                    <ul class="create-option">
+                                        <li class="options">
+                                            <div class="setting-dropdown">
+                                                
+                                                <div class="btn-group custom-dropdown arrow-none dropdown-sm">
+                                                    <!-- <h5 data-bs-togaiugle="dropdown" aria-haspopup="true"
+                                                        aria-expanded="false">public <i class="iw-14"
+                                                            data-feather="chevron-down"></i></h5> -->
+                                                    <!--<label for="privacy"  aria-haspopup="true" aria-expanded="false" style="font-size: 10px;">Privacy</label>-->
+                                                    <select id="privacy" name="privacy" class="form-control" style="font-size: x-small; font-style: oblique;">
+                                                        <option style="font-size: x-small; font-style: oblique;"><i data-feather="chevron-down"> Privacy </i></option>
+                                                        <option style="font-size: x-small; font-style: oblique;" value="Public" aria-checked="true">Public</option>
+                                                        <option style="font-size: x-small; font-style: oblique;" value="Friends">friends Only</option>
+                                                        <option style="font-size: x-small; font-style: oblique; " value="Only me">Only Me</option>
+                                                    </select>
+                                                        <!-- <ul>
+                                                            <li>
+                                                                <a href="#"><i class="icon-font-light iw-16 ih-16"
+                                                                        data-feather="globe"></i>public</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#"><i class="icon-font-light iw-16 ih-16"
+                                                                        data-feather="users"></i>friends</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#"><i class="icon-font-light iw-16 ih-16"
+                                                                        data-feather="user"></i>friends
+                                                                    except</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#"><i class="icon-font-light iw-16 ih-16"
+                                                                        data-feather="user"></i>specific
+                                                                    friends</a>
+                                                            </li>
+                                                            <li>
+                                                                <a href="#"><i class="icon-font-light iw-16 ih-16"
+                                                                        data-feather="lock"></i>only me</a>
+                                                            </li>
+                                                        </ul> -->
+                                                    <!--add closing div-->
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <h5><i class="iw-15" data-feather="video"></i>go live</h5>
+                                        </li>
+                                    </ul>
+                                    <div class="settings">
+                                        <div class="setting-btn ms-2 setting-dropdown no-bg">
+                                            <div class="btn-group custom-dropdown arrow-none dropdown-sm">
+                                                <div role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                                                    aria-expanded="false">
+                                                    <i class="icon icon-font-color iw-14"
+                                                        data-feather="more-horizontal"></i>
+                                                </div>
+                                                <div class="dropdown-menu dropdown-menu-right custom-dropdown">
+                                                    <ul>
+                                                        <li>
+                                                            <a href="#"><i class="icon-font-light iw-16 ih-16"
+                                                                    data-feather="edit"></i>edit
+                                                                profile</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#"><i class="icon-font-light iw-16 ih-16"
+                                                                    data-feather="user"></i>view
+                                                                profile</a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="search-input input-style icon-right">
+                                    <textarea name="content" class="form-control enable" placeholder="write something here.." required></textarea>
+                                    <a href="#">
+                                        <img src="{{url_for('static', filename='assets/images/icon/translate.png')}}"
+                                            class="img-fluid blur-up lazyload icon" alt="translate">
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="create-bg">
+                                <div class="bg-post" id="bg-post">
+                                    <div class="input-sec">
+                                        <input type="text" class="form-control enable"
+                                            placeholder="write something here.." />
+                                        <div class="close-icon">
+                                            <a href="javascript:void(0)">
+                                                <i class="iw-20 ih-20" data-feather="x"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="gradient-bg">
+                                    <li onclick="clickGradient( 'gr-1')" class="gr-1"></li>
+                                    <li onclick="clickGradient( 'gr-2')" class="gr-2"></li>
+                                    <li onclick="clickGradient( 'gr-3')" class="gr-3"></li>
+                                    <li onclick="clickGradient( 'gr-4')" class="gr-4"></li>
+                                    <li onclick="clickGradient( 'gr-5')" class="gr-5"></li>
+                                    <li onclick="clickGradient( 'gr-6')" class="gr-6"></li>
+                                    <li onclick="clickGradient( 'gr-7')" class="gr-7"></li>
+                                    <li onclick="clickGradient( 'gr-8')" class="gr-8"></li>
+                                    <li onclick="clickGradient( 'gr-9')" class="gr-9"></li>
+                                    <li onclick="clickGradient( 'gr-10')" class="gr-10"></li>
+                                    <li onclick="clickGradient( 'gr-11')" class="gr-11"></li>
+                                    <li onclick="clickGradient( 'gr-12')" class="gr-12"></li>
+                                    <li onclick="clickGradient( 'gr-13')" class="gr-13"></li>
+                                    <li onclick="clickGradient( 'gr-14')" class="gr-14"></li>
+                                    <li onclick="clickGradient( 'gr-15')" class="gr-15"></li>
+                                </ul>
+                            </div>
+                            <div class="options-input" id="additional-input">
+                                <a id="icon-close" href="javascript:void(0)">
+                                    <i class="iw-15 icon-font-light icon-close" data-feather="x"></i>
+                                </a>
+                                <div class="search-input feeling-input">
+                                    <input type="text" name="feelings" class="form-control enable" list="feelings"
+                                        placeholder="How Are You Feeling?">
+                                    <datalist id="feelings">
+                                        <option value="Happy">
+                                        <option value="Sad">
+                                        <option value="Angry">
+                                        <option value="Worried">
+                                        <option value="Shy">
+                                        <option value="Excited">
+                                        <option value="Surprised">
+                                        <option value="Silly">
+                                        <option value="Embarrassed">
+                                    </datalist>
+                                    <a href="#">
+                                        <i class="iw-15 icon-left icon-font-light" data-feather="smile"></i>
+                                    </a>
+                                </div>
+                                <div class="search-input place-input">
+                                    <input type="text" class="form-control" placeholder="search for places...">
+                                    <a href="#">
+                                        <i class="iw-15 icon-left icon-font-light" data-feather="map-pin"></i>
+                                    </a>
+                                </div>
+<!--                                <div class="search-input friend-input">-->
+<!--                                    <input type="text" class="form-control" list="friends"-->
+<!--                                        placeholder="search your friends...">-->
+<!--                                    <datalist id="friends">-->
+<!--                                        <option value="Paige Turner">-->
+<!--                                        <option value="Bob Frapples">-->
+<!--                                        <option value="Josephin water">-->
+<!--                                        <option value="Petey Cruiser">-->
+<!--                                        <option value="Anna Sthesia">-->
+<!--                                        <option value="Paul Molive">-->
+<!--                                        <option value="Anna Mull">-->
+<!--                                    </datalist>-->
+<!--                                    <a href="#">-->
+<!--                                        <i class="iw-15 icon-left icon-font-light" data-feather="tag"></i>-->
+<!--                                    </a>-->
+<!--                                </div>-->
+                            </div>
+                            <ul class="create-btm-option">
+                                <li>
+                                    <input class="choose-file" type="file" name="image" multiple accept="image/*">
+                                    <h5><i class="iw-14" data-feather="camera"></i>album</h5>
+                                </li>
+                                <li id="feeling-btn">
+                                    <h5><i class="iw-15" data-feather="smile"></i>feelings & acitivity</h5>
+                                </li>
+                                <li id="checkin-btn">
+                                    <h5><i class="iw-15" data-feather="map-pin"></i>check in</h5>
+                                </li>
+<!--                                <li id="friends-btn">-->
+<!--                                    <h5><i class="iw-15" data-feather="tag"></i>tag friends</h5>-->
+<!--                                </li>-->
+                            </ul>
+                            <div id="post-btn" class="post-btn">
+                                <button disabled="disabled" type="submit" class="Disable">post</button>
+                            </div>
+                        </form>
+                        </div>

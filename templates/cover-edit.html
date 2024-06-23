@@ -1,0 +1,131 @@
+
+<div class="hidden lg:p-20" id="updateprofile" uk-modal="" style="height: auto;">
+    
+    <div class="uk-modal-dialog tt relative overflow-hidden mx-auto bg-white p-7 shadow-xl rounded-lg md:w-[520px] w-full dark:bg-dark2">
+        <div class="text-center py-3 border-b -m-7 mb-0 dark:border-slate-700"> <b>Edit Cover <span class="material-symbols-outlined"> Edit</span> </b>
+            
+            <button type="button" class="button__ico absolute top-0 right-0 m-2.5 uk-modal-close">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+        </div>
+        <form action="/upload_c" method="post" enctype="multipart/form-data">
+        <div class="">
+            <button type="submit" value="edit" class="btn btn-outline" style="position: absolute; left: 50%;">Update</button>
+            <div id="closepre00" style="display: none;" class="w-full h-72 relative border1 rounded-lg overflow-hidden bg-repeat"><span style="font-weight: 500;" class="material-symbols-outlined">close</span>
+                <img id="imagepreview00" class="imagepreview" alt="Uploaded Image"/>
+                <video controls id="videopreview00" class="videopreview" ></video>
+            </div>
+            <div class="gallery-album justify-start items-center">
+                <label for="editupload" class="">
+                    <input id="editupload" name="picts" accept="image/jpg, image/png" onchange="previewFile()" type="file" hidden>
+                    <span class="material-symbols-outlined upl">photo</span>
+                </label>
+            </div>
+
+            <div class="gallery-album justify-start items-center">
+                <label for="foradio">
+                    <input type="radio" name="sele" value="cover" id="foradio" >
+                    <span class=""> Cover</span>
+                    &ensp; &ensp;
+                    <input type="radio" checked name="sele" value="profile" id="foradio" >
+                    <span class=""> Profile </span>
+                    &ensp; &ensp;
+                    <input type="radio" name="sele" value="both" id="foradio" >
+                    <span class=""> Both </span>
+
+                </label>
+
+                &ensp; &ensp; &ensp;
+                <div>
+                    <div style="padding: 15px;">
+                    <a href="#" style="" class="inline-flex items-center gap-2 py-3 leading-8 px-3">
+                        More <ion-icon name="chevron-down"></ion-icon>
+                    </a>
+                    <div  class="md:w-[240px] w-screen" style="background-color: transparent;" uk-dropdown="pos: bottom-right; animation: uk-animation-scale-up uk-transform-origin-top-left; animate-out: true; mode: click;offset:-4">
+                        <nav class="text-[15px]">
+                            <span id="droped" onclick="editphoto()" > My photos </span>
+                            <!-- <a href="#"> Music </a>   -->
+
+                        </nav>
+                    </div>
+                    </div>
+                    <div>
+                        <div class=" " id="myphotos" style="display: none;">
+                            <button type="button" class="material-symbols-outlined btn-outline" style=" color: red; width: 25px;position: fixed; right: 30%; bottom: 50%;" id="closeit">close</button>
+                            <div class=" role image-gallery ratio_square">
+
+                                <div class="grid grid-cols-3 gap-2 gap-y-5 text-center text-sm mt-4 mb-2">
+                                    <label for="chk-ani11"></label>
+                                    {% for image in images %}
+                                    <div>
+                                        <input class="radio_animated" id="chk-ani11" value="{{image.file_info}}" type="radio" name="Radiosim"
+                                            >
+                                            <div class="relative w-full aspect-square rounded-lg overflow-hidden">
+                                                <img src="{{url_for('static', filename='user/imgs/' + image.file_info)}}"
+                                                    class="img-fluid backdrop-blur-xl lazyload bg-img" alt="">
+                                            </div>
+
+                                    </div>
+                                    {% endfor %}
+
+
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </div>
+                
+                </div>
+            </div>
+        </div>
+        <button type="submit" value="edit" class="btn btn-outline" >Update</button>
+        </form>
+
+    </div>
+  
+                            
+</div>
+<script>
+
+    const uploadDiv = document.getElementById('closepre00');
+    // Function to handle changes in the file input
+    function previewFile() {
+      const previewImage = document.getElementById('imagepreview00');
+      const previewVideo = document.getElementById('videopreview00');
+      const fileInput = document.getElementById('editupload');
+      const file = fileInput.files[0]; // Get the first file selected by the user
+      uploadDiv.style.display = 'block';
+  
+      if (file) {
+        // Check if the file is an image
+        if (file.type.startsWith('image/')) {
+          previewImage.style.display = 'block';
+          previewVideo.style.display = 'none';
+          previewImage.src = URL.createObjectURL(file); // Set the src of img element to the file
+          previewImage.onload = function() {
+            URL.revokeObjectURL(previewImage.src); // Free memory when the image is loaded
+          };
+        }
+        // Check if the file is a video
+        else if (file.type.startsWith('video/')) {
+          previewVideo.style.display = 'block';
+          previewImage.style.display = 'none';
+          previewVideo.src = URL.createObjectURL(file); // Set the src of video element to the file
+          previewVideo.onload = function() {
+            URL.revokeObjectURL(previewVideo.src); // Free memory when the video is loaded
+          };
+        }
+      }
+    }
+  
+    // Add change event listener to the file input
+    document.getElementById('editupload').addEventListener('change', previewFile);
+
+    uploadDiv.onclick = function(){
+        uploadDiv.style.display = 'none';
+    }
+  </script>
+  

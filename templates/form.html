@@ -1,0 +1,48 @@
+<script>
+    document.getElementById('followform').addEventListener('submit', function(e){
+        e.preventDefault();
+        const formdata = new FormData(this);
+        const username = "{{ other.id }}"; // Make sure this template variable is rendered correctly
+        fetch('/follow/' + username, {
+            method: 'POST',
+            body: formdata
+        })
+        .then(response => {
+            if (!response.ok){
+                throw new Error('Network error');
+            }
+            return response.text();
+        })
+        .then(result => {
+            console.log('Success', result);
+            // You might want to update the UI here to show the success status
+        })
+        .catch(error => { // Fixed the syntax error here
+            console.error('Error:', error);
+            // You might want to update the UI here to show the error status
+        });
+    });
+    document.getElementById('unfollowform').addEventListener('submit', function(e){
+        e.preventDefault();
+        const formdata = new FormData(this);
+        const username = "{{ other.id }}"; // Make sure this template variable is rendered correctly
+        fetch('/unfollow/' + username, {
+            method: 'POST',
+            body: formdata
+        })
+        .then(response => {
+            if (!response.ok){
+                throw new Error('Network error');
+            }
+            return response.text();
+        })
+        .then(result => {
+            console.log('Success', result);
+            // You might want to update the UI here to show the success status
+        })
+        .catch(error => { // Fixed the syntax error here
+            console.error('Error:', error);
+            // You might want to update the UI here to show the error status
+        });
+    });
+</script>

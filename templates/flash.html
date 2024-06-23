@@ -1,0 +1,59 @@
+<style>
+    .flash {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.success {
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.error, .danger {
+    color: whitesmoke;
+    background-color: #b02a37;
+    border-color: #f5c6cb;
+}
+.cant {
+  color: whitesmoke;
+    background-color:sandybrown;
+    border-color: #f5c6cb;
+}
+@keyframes fadeOut {
+  to {
+      opacity: 0;
+      visibility: hidden;
+  }
+}
+
+.fade-out {
+  animation: fadeOut 2s ease-out 8s forwards; /* Animation will last for 2 seconds and start after 8 seconds (total 10 seconds) */
+}
+
+
+</style>
+<script src="{{url_for('static', filename='chat.js')}}"></script>
+
+{% with messages = get_flashed_messages(with_categories=True) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="flash {{ category }} fade-out">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(function() {
+        const elements = document.querySelectorAll('.flash, .success, .error, .danger, .cant');
+        elements.forEach(function(el) {
+            el.classList.add('fade-out');
+        });
+    }, 10000); // 10000 milliseconds = 10 seconds
+});
+
+</script>

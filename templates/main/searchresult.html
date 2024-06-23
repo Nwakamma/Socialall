@@ -1,0 +1,270 @@
+{% extends "dist/main.html" %}
+{% block content %}
+{% include "appfiles.html" %}
+
+<div class="container">
+	<div class="row">
+		<div class="col col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+			<div class="ui-block responsive-flex">
+				<div class="ui-block-title">
+					<div class="h6 title"></div>
+					<form class="w-search">
+						<div class="form-group with-button">
+							<input class="form-control" type="text" placeholder="Search Friends...">
+							<button>
+								<svg class="olymp-magnifying-glass-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-magnifying-glass-icon"></use></svg>
+							</button>
+						</div>
+					</form>
+					<a href="#" class="more"><svg class="olymp-three-dots-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use></svg></a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<!-- Friends -->
+
+<div class="container">
+	<div class="row">
+		{% for users in searchi %}
+		<div class="col col-xl-3 col-lg-6 col-md-6 col-sm-6 col-12">
+			<div class="ui-block">
+				
+				<!-- Friend Item -->
+				
+				<div class="friend-item">
+					<div class="friend-header-thumb">
+						<img src="{{url_for('static', filename='user/imgs/' + users.cover_photo)}}" alt="friend">
+					</div>
+				
+					<div class="friend-item-content">
+				
+						<div class="more">
+							<svg class="olymp-three-dots-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use></svg>
+							<ul class="more-dropdown">
+								<!-- <li>
+									<a href="#">Report Profile</a>
+								</li>
+								<li>
+									<a href="#">Block Profile</a>
+								</li>
+								<li>
+									<a href="#">Turn Off Notifications</a>
+								</li> -->
+							</ul>
+						</div>
+						<div class="friend-avatar">
+							<div class="relative w-full aspect-square rounded-lg overflow-hidden rounded-full border-yellow-900" style="height: 7pc; width: 7pc; margin-left: 3pc; ">
+								<img src="{{url_for('static', filename='user/imgs/' + users.profile_photo)}}" alt="author">
+							</div>
+							<div class="author-content">
+								<a href="{{url_for('profile', username=users.username)}}" class="h5 author-name"> {{users.lastname}} {{users.firstname}} </a>
+								<div class="country"> {% if users.current_city == None %} {% else %} {{users.current_city}}, {% endif %} {{users.country}} </div>
+							</div>
+						</div>
+				
+						<div class="swiper-container" data-slide="fade">
+							<div class="swiper-wrapper">
+								<div class="swiper-slide">
+									<div class="friend-count" data-swiper-parallax="-500">
+										<a href="#" class="friend-count-item">
+											<div class="h6"> {{users.followers.count()}} </div>
+											<div class="title">Followers</div>
+										</a>
+										<a href="#" class="friend-count-item">
+											<div class="h6"> {{imgs[users.id]}}</div>
+											<div class="title"> Images  </div>
+										</a>
+										
+										<a href="#" class="friend-count-item">
+											<div class="h6"> {{posti[users.id]}} </div>
+											<div class="title">Videos</div>
+										</a>
+										
+									</div>
+									<div class="control-block-button" data-swiper-parallax="-100">
+										{% if users.id == user.id %}
+										{% else %}
+										{% if foll[users.id] %}
+										<div class="btn btn-control bg-blue">
+											<form action="/unfollow/{{users.id}}" method="post" ><button><span class="material-symbols-outlined"> person_cancel </span></button></form>
+										</div>
+										{% else %}
+										<div class="btn btn-control bg-blue">
+											<form action="/follow/{{users.id}}" method="post"><button><span class="material-symbols-outlined"> person_add </span></button></form>
+										</div>
+										{% endif %}
+										{% endif %}
+										{% if users.id == user.id %}
+										{% else %}
+										{% if foll[users.id] %}
+										<a href="{{url_for('messenger', username=users.username)}}" class="btn btn-control bg-purple">
+											<span class="material-symbols-outlined"> chat </span>
+										</a>
+										{% else %}
+										<!-- <div href="#" class="btn btn-control bg-blue">
+											<form><button><span class="material-symbols-outlined"> person_add </span></button></form>
+										</div> -->
+										{% endif %}
+										{% endif %}
+				
+									</div>
+								</div>
+				
+								<div class="swiper-slide">
+									<p class="friend-about" data-swiper-parallax="-500">
+										{% if users.Bio == None %} {% else %} {{users.Bio}}. {% endif %}
+									</p>
+				
+									<div class="friend-since" data-swiper-parallax="-100">
+										{% if foll[users.id] %}
+										<span>Friends Since:</span>
+										<div class="h6"> {{isf[users.id].timestamp.strftime('%A %d %B')}} </div>
+										{% endif %}
+									</div>
+								</div>
+							</div>
+				
+							<!-- If we need pagination -->
+							<div class="swiper-pagination"></div>
+						</div>
+					</div>
+				</div>
+				
+				<!-- ... end Friend Item -->			</div>
+		</div>
+		{% endfor %}
+		
+		
+	</div>
+</div>
+<div class="col col-xl-6 order-xl-2 col-lg-12 order-lg-1 col-md-12 col-sm-12 col-12">
+			<div class="ui-block">
+				<div class="ui-block-title">
+					<div class="h6 title">Showing {{posts | length }} Results for: “<span class="c-primary">{{q}}</span>”</div>
+				</div>
+			</div>
+
+			<div id="search-items-grid">
+				{% for post in posts %}
+
+				<div class="ui-block">
+
+					<!-- Search Result -->
+
+					<article class="hentry post searches-item">
+
+						<div class="post__author author vcard inline-items">
+							<img src="{{url_for('static', filename='user/imgs/' + post.user.profile_photo)}}" alt="author">
+
+							<div class="author-date">
+								<a class="h6 post__author-name fn" href="{{url_for('posts_s', post_id=post.id)}}"> {{post.user.lastname}} {{post.user.firstname}} </a>
+								<div class="country"> {%if post.user.current_city == None %} {% else %} {{post.user.current_city}} {% endif %} {{post.user.country}} </div>
+							</div>
+
+							<span class="notification-icon">
+								<!-- <a href="#" class="accept-request">
+									<span class="icon-add without-text">
+										<svg class="olymp-happy-face-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-happy-face-icon"></use></svg>
+									</span>
+								</a> -->
+
+								<!-- <a href="#" class="accept-request chat-message">
+									<svg class="olymp-chat---messages-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-chat---messages-icon"></use></svg>
+								</a> -->
+							</span>
+
+							<div class="more">
+								<svg class="olymp-three-dots-icon"><use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use></svg>
+								<ul class="more-dropdown">
+									<!-- <li>
+										<a href="#">Edit Post</a>
+									</li>
+									<li>
+										<a href="#">Delete Post</a>
+									</li>
+									<li>
+										<a href="#">Turn Off Notifications</a>
+									</li>
+									<li>
+										<a href="#">Select as Featured</a>
+									</li> -->
+								</ul>
+							</div>
+
+						</div>
+
+						<p class="user-description">
+							{{post.content}}
+						</p>
+						{% if post.images %}
+						
+
+						<div class="post-block-photo js-zoom-gallery">
+							{% for img in post.images %}
+							<a href="{{url_for('static', filename='user/imgs/' + img.file_info )}}" class="col col-3-width"><img src="{{url_for('static', filename='user/imgs/' + img.file_info )}}" alt="{{post.content}}"></a>
+							<!-- <a href="{{url_for('static', filename='app/img/post-photo4.jpg')}}" class="col col-3-width"><img src="{{url_for('static', filename='app/img/post-photo4.jpg')}}" alt="photo"></a>
+							<a href="{{url_for('static', filename='app/img/post-photo5.jpg')}}" class="more-photos col-3-width">
+								<img src="{{url_for('static', filename='app/img/post-photo5.jpg')}}" alt="photo">
+								<span class="h2">+352</span>
+							</a> -->
+							{% endfor %}
+						</div>
+						{% endif %}
+
+						<div class="post-additional-info">
+
+							<ul class="friends-harmonic">
+								{% for mm in m %}
+								<li>
+									<a href="{{url_for('profile', username=mm.username)}}">
+										<img src="{{url_for('static', filename='user/imgs/' + mm.profile_photo)}}" alt="friend">
+									</a>
+									
+								</li>
+								{% endfor %}
+								
+								
+							</ul>
+							{% if folls[post.id] %}
+							<div class="names-people-likes">
+								You and {{post.user.firstname}} have
+								<a href="#"> {{mc[post.id]}} Friends in Common</a>
+							</div>
+							{% endif %}
+
+							<div class="friend-count">
+								<a href="#" class="friend-count-item">
+									<div class="h6">{{post.user.followers.count()}}</div>
+									<div class="title">Followers</div>
+								</a>
+								<a href="#" class="friend-count-item">
+									<div class="h6">{{img[post.id]}}</div>
+									<div class="title">Photos</div>
+								</a>
+								<a href="#" class="friend-count-item">
+									<div class="h6">{{vid[post.id]}}</div>
+									<div class="title">Videos</div>
+								</a>
+							</div>
+
+						</div>
+
+					</article>
+					<!-- ... end Search Result -->
+				</div>
+				{% endfor %}
+
+				
+
+			</div>
+
+			<a id="load-more-button" href="#" class="btn btn-control btn-more" data-load-link="search-items-to-load.html" data-container="search-items-grid">
+				<svg class="olymp-three-dots-icon">
+					<use xlink:href="svg-icons/sprites/icons.svg#olymp-three-dots-icon"></use>
+				</svg>
+			</a>
+		</div>
+{% endblock %}
