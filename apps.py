@@ -43,9 +43,9 @@ limiter.init_app(app)
 
 
 
-with app.app_context():
-     configure_mappers()
-     db.create_all()
+#with app.app_context():
+#     configure_mappers()
+#     db.create_all()
 
 ####### End for database
 
