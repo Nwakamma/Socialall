@@ -43,7 +43,7 @@ limiter.init_app(app)
 
 
 
-#with app.app_context():
+# with app.app_context():
 #     configure_mappers()
 #     db.create_all()
 
@@ -85,7 +85,7 @@ def before_request():
 def home():
     if session.get('logged_in'):
         user=User.query.get(current_user.id)
-        if user.roles == 'Artist':
+        if user.roles in ['Admin','Artist']:
             return redirect(url_for('main.homee'))
         else:
             return redirect(url_for('news', username=user.username))
@@ -1046,7 +1046,7 @@ def edit_user(username):
 def profile(username):
     if session.get('logged_in'):
         user = User.query.get(current_user.id)
-        if user.roles == 'Artist':
+        if user.roles in ['Admin','Artist']:
             return redirect(url_for('main.homee'))
         else:
             restrict()
@@ -1349,7 +1349,7 @@ def friends(username):
 def download(filename):
     if session.get('logged_in'):
         user=me()
-        if user.roles == 'Artist':
+        if user.roles in ['Admin','Artist']:
             directory = current_app.config['UPLOAD_FOLDER_AUDIO']
             return send_from_directory(directory,filename, as_attachment=True)
         else:
@@ -1534,4 +1534,4 @@ def get_recipient_sid(user_id):
 
 
 if __name__ == '__main__':
-    socketio.run(app, debug=True, host='0.0.0.0', port=80, use_reloader=False, allow_unsafe_werkzeug=True)
+    socketio.run(app, debug=True,  host='0.0.0.0', port=80, use_reloader=False, allow_unsafe_werkzeug=True)
